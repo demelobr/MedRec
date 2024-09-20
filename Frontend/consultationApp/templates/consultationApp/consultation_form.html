@@ -1,0 +1,92 @@
+{% load static %}
+<!DOCTYPE html>
+<html>
+<head>
+    <title>MedRec</title>
+    <link rel="stylesheet" type="text/css" href="{% static 'consultationApp/css/style.css' %}">
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+</head>
+<body>
+    <div class="card">
+        <h1>MedRec</h1>
+        <h3>Marcar Consulta</h3>
+
+        <form id="consultationForm">
+            <label for="doctor">Selecione o Médico:</label>
+            <select id="doctor" name="doctor">
+                <!-- Médicos serão carregados via API -->
+            </select><br>
+
+            <label for="patient">Selecione o Paciente:</label>
+            <select id="patient" name="patient">
+                <!-- Pacientes serão carregados via API -->
+            </select><br>
+
+            <label for="date">Data:</label>
+            <input type="date" id="date" name="date"><br>
+
+            <label for="time">Horário:</label>
+            <input type="time" id="time" name="time"><br>
+
+            <label for="notes">Observações:</label>
+            <textarea id="notes" name="notes"></textarea><br>
+
+            <button type="submit">Marcar Consulta</button>
+        </form>
+
+        <div id="response"></div>
+    </div>
+
+    <script>
+        // Carregar médicos ao carregar a página
+        $(document).ready(function() {
+            $.ajax({
+                url: "http://127.0.0.1:8000/api/doctors/",  // Substitua pela URL da API de médicos
+                method: "GET",
+                success: function(data) {
+                    data.forEach(function(doctor) {
+                        $('#doctor').append(new Option(`${doctor.name} | ${doctor.specialization_name}`, doctor.id));
+                    });
+                }
+            });
+
+            // Carregar pacientes ao carregar a página
+            $.ajax({
+                url: "http://127.0.0.1:8000/api/users/",  // Substitua pela URL da API de usuários/pacientes
+                method: "GET",
+                success: function(data) {
+                    data.forEach(function(patient) {
+                        $('#patient').append(new Option(`${patient.first_name} ${patient.last_name} | ${patient.username}`, patient.id));  // Supondo que o campo 'username' represente o paciente
+                    });
+                }
+            });
+
+            // Submeter o formulário de consulta via AJAX
+            $('#consultationForm').submit(function(e) {
+                e.preventDefault();
+
+                // Preparar dados para enviar no formato JSON
+                $.ajax({
+                    url: "http://127.0.0.1:8000/api/consultations/create/",  // Substitua pela URL da API de consultas
+                    method: "POST",
+                    contentType: "application/json",  // Especifica que estamos enviando JSON
+                    dataType: "json",  // Espera resposta JSON
+                    data: JSON.stringify({
+                        doctor: $('#doctor').val(),
+                        patient: $('#patient').val(),
+                        date: $('#date').val(),
+                        time: $('#time').val(),
+                        notes: $('#notes').val()
+                    }),
+                    success: function(response) {
+                        $('#response').html("<p>Consulta marcada com sucesso!</p>");
+                    },
+                    error: function(response) {
+                        $('#response').html("<p>Erro ao marcar consulta. Tente novamente.</p>");
+                    }
+                });
+            });
+        });
+    </script>
+</body>
+</html>
