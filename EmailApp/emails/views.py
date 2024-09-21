@@ -16,16 +16,8 @@ class EmailSendView(generics.CreateAPIView):
         serializer.is_valid(raise_exception=True)
         email_instance = serializer.save()  # Salva o e-mail no banco de dados
 
-        # Enviar o e-mail usando o Django
         try:
-            send_mail(
-                email_instance.subject,
-                email_instance.body,
-                EMAIL_HOST_USER,  # O remetente
-                [email_instance.to_address],  # Lista de destinatários
-                fail_silently=False,
-            )
-        except Exception as e:
+            send_mail(email_instance.subject, email_instance.body, EMAIL_HOST_USER, [email_instance.to_address])
+        except:
             return Response({"detail": f"E-mail não enviado: {str(e)}"}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
-
-        return Response(serializer.data, status=status.HTTP_201_CREATED)
+        return Response(serializer.data, status=status.HTTP_200_OK)
