@@ -56,9 +56,23 @@ button:hover {
     background-color: #0b7dda;
 }
 
-/* Mensagem de resposta */
+/* Estilo padrão da div #response */
 #response {
-    margin-top: 15px;
+    display: none; /* Inicialmente escondido */
+    padding: 15px;
+    margin-top: 10px;
+    border-radius: 10px;
     font-size: 14px;
-    color: red;
+    color: white;  /* O texto será branco */
+    text-align: center;
+}
+
+/* Estilo para mensagem de sucesso */
+.success {
+    background-color: #4CAF50; /* Verde claro para sucesso */
+}
+
+/* Estilo para mensagem de erro */
+.error {
+    background-color: #f44336; /* Vermelho claro para erro */
 }

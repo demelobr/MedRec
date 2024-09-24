@@ -11,6 +11,8 @@
         <h1>MedRec</h1>
         <h3>Marcar Consulta</h3>
 
+        <div id="response"></div>
+
         <form id="consultationForm">
             <label for="doctor">Selecione o Médico:</label>
             <select id="doctor" name="doctor">
@@ -34,7 +36,7 @@
             <button type="submit">Marcar Consulta</button>
         </form>
 
-        <div id="response"></div>
+        <!--<div id="response"></div>!-->
     </div>
 
     <script>
@@ -79,12 +81,34 @@
                         notes: $('#notes').val()
                     }),
                     success: function(response) {
-                        $('#response').html("<p>Consulta marcada com sucesso!</p>");
+                        //$('#response').html("<p>Consulta marcada com sucesso!</p>");
+                        showMessage("Consulta marcada com sucesso!", "success");
+                        setTimeout(function() {
+                            window.location.reload();
+                        }, 2000);
                     },
                     error: function(response) {
-                        $('#response').html("<p>Erro ao marcar consulta. Tente novamente.</p>");
+                        //$('#response').html("<p>Erro ao marcar consulta. Tente novamente.</p>");
+                        showMessage("Erro ao marcar consulta. Tente novamente.", "error");
+                        setTimeout(function() {
+                            window.location.reload();
+                        }, 2000);
                     }
                 });
+
+            // Função para exibir mensagens de sucesso ou erro
+            function showMessage(message, type) {
+                const responseDiv = $('#response');
+                responseDiv.text(message);
+                responseDiv.removeClass('success error');
+                if (type === "success") {
+                    responseDiv.addClass('success');
+                } else {
+                    responseDiv.addClass('error');
+                }
+                responseDiv.fadeIn().delay(2000).fadeOut();
+            }
+
             });
         });
     </script>

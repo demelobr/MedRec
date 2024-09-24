@@ -19,5 +19,5 @@ class EmailSendView(generics.CreateAPIView):
         try:
             send_mail(email_instance.subject, email_instance.body, EMAIL_HOST_USER, [email_instance.to_address])
         except:
-            return Response({"detail": f"E-mail não enviado: {str(e)}"}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+            return Response({"detail": f"E-mail não enviado!"}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
         return Response(serializer.data, status=status.HTTP_200_OK)
